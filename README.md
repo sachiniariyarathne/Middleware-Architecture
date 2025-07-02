@@ -1,7 +1,6 @@
-# 📡 Middleware Architectures: Publish/Subscribe System
+# Middleware Architecture Assignment 01 Publish/Subscribe System
 
 **Course:** IS3108 / SCS3203  
-**Assignment 01 — UCSC 2025**  
 **Language:** Python  
 
 ---
