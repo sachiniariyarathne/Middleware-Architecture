@@ -2,13 +2,12 @@ import socket
 import threading
 import sys
 
-# Dictionary to map topics to subscriber socket lists
-topic_subscribers = {}  # { topic: [subscriber_socket1, subscriber_socket2, ...] }
-lock = threading.Lock()  # For thread-safe access to the dictionary
+topic_subscribers = {} 
+lock = threading.Lock() 
 
 def handle_client(client_socket, client_address):
     try:
-        # Receive the initial data: "ROLE,TOPIC"
+
         initial_data = client_socket.recv(2048).decode().strip()
         if ',' not in initial_data:
             print(f"[{client_address}] Invalid format. Expected 'ROLE,TOPIC'. Closing connection.")
@@ -21,7 +20,7 @@ def handle_client(client_socket, client_address):
 
         print(f"[{client_address}] Role: {client_role}, Topic: {client_topic}")
 
-        # Register client to the appropriate topic
+
         with lock:
             if client_role == "SUBSCRIBER":
                 if client_topic not in topic_subscribers:
@@ -34,7 +33,7 @@ def handle_client(client_socket, client_address):
                 return
 
         if client_role == "PUBLISHER":
-            # Listen for messages from the publisher
+
             while True:
                 message = client_socket.recv(2048).decode()
                 if not message or message.strip().lower() == "terminate":
@@ -43,7 +42,7 @@ def handle_client(client_socket, client_address):
 
                 print(f"[PUBLISHER {client_address}] [{client_topic}] {message.strip()}")
 
-                # Forward message to all subscribers of the same topic
+
                 with lock:
                     subscribers = topic_subscribers.get(client_topic, [])
                     for sub in subscribers:
@@ -54,7 +53,7 @@ def handle_client(client_socket, client_address):
                             continue
 
         elif client_role == "SUBSCRIBER":
-            # Subscribers do nothing but receive; keep connection alive
+
             while True:
                 try:
                     data = client_socket.recv(2048)

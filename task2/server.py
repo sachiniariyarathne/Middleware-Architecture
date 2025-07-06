@@ -2,17 +2,16 @@ import socket
 import threading
 import sys
 
-subscribers_list = [] # List of subscriber sockets
-publishers_list = [] # List of publisher sockets
-lock = threading.Lock() # Thread-safe access to lists
+subscribers_list = [] 
+publishers_list = [] 
+lock = threading.Lock() 
 
 def handle_client(client_socket, client_address):
     try:
-        # Receive role: PUBLISHER or SUBSCRIBER
+
         client_role = client_socket.recv(2048).decode().strip().upper()
         print(f"[{client_address}] Role: {client_role}")
 
-        # Register client
         with lock:
             if client_role == "PUBLISHER":
                 publishers_list.append(client_socket)
@@ -24,7 +23,7 @@ def handle_client(client_socket, client_address):
                 return
 
         if client_role == "PUBLISHER":
-            # Listen for messages from the publisher
+
             while 1:
                 message = client_socket.recv(2048).decode()
 
@@ -34,7 +33,6 @@ def handle_client(client_socket, client_address):
 
                 print(f"[PUBLISHER {client_address}] {message.strip()}")
 
-                # Forward the message from the publisher to all subscribers
                 with lock:
                     for sub in subscribers_list:
                         try:
@@ -44,7 +42,7 @@ def handle_client(client_socket, client_address):
                             continue
         
         elif client_role == "SUBSCRIBER":
-            # Subscriber does nothing but wait to receive
+
             while 1:
                 try:
                     data = client_socket.recv(2048)
