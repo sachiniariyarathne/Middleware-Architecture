@@ -2,7 +2,7 @@ import socket
 import sys
 import threading
 
-def receive_messages(client_socket):
+def T3_receive_messages(client_socket):
     while 1:
         try:
             message = client_socket.recv(2048).decode()
@@ -13,7 +13,7 @@ def receive_messages(client_socket):
         except:
             break
 
-def start_client(ip, port, role, topic):
+def T3_begin_client(ip, port, role, topic):
 
     role = role.upper()
     if role not in ["PUBLISHER", "SUBSCRIBER"]:
@@ -27,14 +27,14 @@ def start_client(ip, port, role, topic):
         client_socket.connect((ip, port))
 
     except:
-        print("Failed to connect to server.")
+        print("❌ Failed to connect to server.")
         return
 
     #Send role and topic to server
     client_socket.sendall(f"{role},{topic}".encode())
 
     if role == "PUBLISHER":
-        print(f"You are a Publisher on topic '{topic}'. Type messages to send. Type 'terminate' to exit.")
+        print(f"📤 You are a Publisher on topic '{topic}'. Type messages to send. Type 'terminate' to exit.")
         while 1:
             message = input()
             client_socket.sendall(message.encode())
@@ -42,8 +42,8 @@ def start_client(ip, port, role, topic):
                 break
 
     elif role == "SUBSCRIBER":
-        print(f"You are a Subsciber to topic '{topic}'. Waiting for messages...")
-        receive_messages(client_socket)
+        print(f"📤 You are a Subsciber to topic '{topic}'. Waiting for messages...")
+        T3_receive_messages(client_socket)
 
     client_socket.close()
 
@@ -51,7 +51,7 @@ def main():
     if len(sys.argv) != 5:
         print("Usage: python client.py <SERVER_IP> <PORT> <PUBLISHER>|<SUBSCRIBER> <TOPIC>")
     else:
-        start_client(sys.argv[1], int(sys.argv[2]), sys.argv[3], sys.argv[4])
+        T3_begin_client(sys.argv[1], int(sys.argv[2]), sys.argv[3], sys.argv[4])
 
 if __name__ == '__main__':
     main()

@@ -2,7 +2,7 @@ import socket
 import sys
 import threading
 
-def receive_messages(client_socket):
+def T2_receive_messages(client_socket):
     while 1:
         try:
             message = client_socket.recv(2048).decode()
@@ -13,7 +13,7 @@ def receive_messages(client_socket):
         except:
             break
 
-def start_client(ip, port, role):
+def T2_begin_client(ip, port, role):
     
     role = role.upper()
     if role not in ["PUBLISHER", "SUBSCRIBER"]:
@@ -27,14 +27,14 @@ def start_client(ip, port, role):
         client_socket.connect((ip, port))
 
     except:
-        print("Failed to connect to server.")
+        print("❌ Failed to connect to server.")
         return
     
     #Send role to server
     client_socket.sendall(role.encode())   
 
     if role == "PUBLISHER":
-        print("You are a Publisher. Type messages to send. Type 'terminate' to exit.")
+        print("📤 You are a Publisher. Type messages to send. Type 'terminate' to exit.")
         while 1:
             message = input()
             client_socket.sendall(message.encode())
@@ -44,15 +44,15 @@ def start_client(ip, port, role):
         client_socket.close()
     
     elif role == "SUBSCRIBER":
-        print("You are a Subsciber. Waiting for messages...")
-        receive_messages(client_socket)
+        print("📤 You are a Subsciber. Waiting for messages...")
+        T2_receive_messages(client_socket)
         client_socket.close()
 
 def main():
     if len(sys.argv) != 4:
         print("Usage: python client.py <SERVER_IP> <PORT> <PUBLISHER>|<SUBSCRIBER>")
     else:
-        start_client(sys.argv[1], int(sys.argv[2]), sys.argv[3])
+        T2_begin_client(sys.argv[1], int(sys.argv[2]), sys.argv[3])
 
 if __name__ == '__main__':
     main()

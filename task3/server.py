@@ -10,7 +10,7 @@ def handle_client(client_socket, client_address):
 
         initial_data = client_socket.recv(2048).decode().strip()
         if ',' not in initial_data:
-            print(f"[{client_address}] Invalid format. Expected 'ROLE,TOPIC'. Closing connection.")
+            print(f"🛑 [{client_address}] Invalid format. Expected 'ROLE,TOPIC'. Closing connection.")
             client_socket.close()
             return
 
@@ -28,7 +28,7 @@ def handle_client(client_socket, client_address):
                 topic_subscribers[client_topic].append(client_socket)
 
             elif client_role != "PUBLISHER":
-                print(f"[{client_address}] Invalid role. Closing connection.")
+                print(f"🛑 [{client_address}] Invalid role. Closing connection.")
                 client_socket.close()
                 return
 
@@ -80,7 +80,7 @@ def start_server(port):
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind(('', port))
     server_socket.listen(10)
-    print(f"[SERVER] Listening on port {port}")
+    print(f"✅ [SERVER] Listening on port {port}")
 
     while True:
         client_socket, client_address = server_socket.accept()

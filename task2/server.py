@@ -18,7 +18,7 @@ def handle_client(client_socket, client_address):
             elif client_role == "SUBSCRIBER":
                 subscribers_list.append(client_socket)
             else:
-                print(f"[{client_address}] Invalid role. Closing connection.")
+                print(f"🛑 [{client_address}] Invalid role. Closing connection.")
                 client_socket.close()
                 return
 
@@ -69,7 +69,7 @@ def start_server(port):
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind(('', port))
     server_socket.listen(10)
-    print(f"[SERVER] Listening on port {port}")
+    print(f"✅ [SERVER] Listening on port {port}")
 
     while 1:
         client_socket, client_address = server_socket.accept()
